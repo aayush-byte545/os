@@ -1,0 +1,23 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
+
+int main() {
+    PROCESS_INFORMATION pi; 
+    STARTUPINFO si = {sizeof(si)};
+    char *cmd = "cmd.exe";  // You can replace this with any command to run
+    
+    // Create a new process (similar to fork)
+    if (CreateProcess(NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+        printf("Parent Process:\n");
+        printf("PID: %lu\n", GetCurrentProcessId());
+        printf("Child PID: %lu\n", pi.dwProcessId);
+
+        // Optionally, you can wait for the child process to finish
+        WaitForSingleObject(pi.hProcess, INFINITE);
+    } else {
+        printf("Failed to create process\n");
+    }
+
+    return 0;
+}

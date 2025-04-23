@@ -1,0 +1,2 @@
+echo "Current Logged user is $(whoami)"
+echo "Log Name is $(LOGNAME)"

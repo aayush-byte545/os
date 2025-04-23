@@ -3,10 +3,10 @@
 #include <windows.h>
 
 int main() {
-    PROCESS_INFORMATION pi; 
+    PROCESS_INFORMATION pi;
     STARTUPINFO si = {sizeof(si)};
     char *cmd = "cmd.exe";  // You can replace this with any command to run
-    
+
     // Create a new process (similar to fork)
     if (CreateProcess(NULL, cmd, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
         printf("Parent Process:\n");
@@ -19,5 +19,5 @@ int main() {
         printf("Failed to create process\n");
     }
 
-    return 0;
+    return 0;
 }

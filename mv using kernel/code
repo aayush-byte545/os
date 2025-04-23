@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Check if 2 arguments are given
+if [ $# -ne 2 ]; then
+  echo "Usage: $0 <source> <destination>"
+  exit 1
+fi
+
+src="$1"
+dest="$2"
+
+# First, try using mv (acts like rename)
+if mv "$src" "$dest"; then
+  echo "Moved successfully using mv!"
+  exit 0
+else
+  # If mv fails, try using link + unlink
+  if ln "$src" "$dest"; then
+    rm "$src"
+    echo "Moved successfully using link + unlink!"
+    exit 0
+  else
+    echo "Error moving file!"
+    exit 1
+  fi
+fi

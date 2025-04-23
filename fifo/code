@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+#define FRAME_SIZE 3
+#define STRING_LENGTH 12
+
+int main() {
+    int page_reference_string[STRING_LENGTH] = {1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5};
+    int frames[FRAME_SIZE] = {-1, -1, -1}; // Initialize frames to -1
+    int page_faults = 0, page_hits = 0;
+    int queue_index = 0;
+
+    // Print the page reference string
+    printf("Page Reference String: ");
+    for (int i = 0; i < STRING_LENGTH; i++) {
+        printf("%d ", page_reference_string[i]);
+    }
+    printf("\n");
+
+    // Process each page in the reference string
+    for (int i = 0; i < STRING_LENGTH; i++) {
+        int page = page_reference_string[i];
+        bool page_found = false;
+
+        // Check if page is already in memory
+        for (int j = 0; j < FRAME_SIZE; j++) {
+            if (frames[j] == page) {
+                page_found = true;
+                page_hits++; // Increment hit count
+                break;
+            }
+        }
+
+        // If page not found (page fault)
+        if (!page_found) {
+            page_faults++;
+
+            // If frames are full, replace the oldest page
+            if (frames[0] != -1 && frames[1] != -1 && frames[2] != -1) {
+                frames[queue_index] = page;
+                queue_index = (queue_index + 1) % FRAME_SIZE; // Circular queue
+            } else {
+                // Find the next available frame
+                for (int j = 0; j < FRAME_SIZE; j++) {
+                    if (frames[j] == -1) {
+                        frames[j] = page;
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Print the current state of frames
+        printf("Page: %d\tFrames: ", page);
+        for (int j = 0; j < FRAME_SIZE; j++) {
+            if (frames[j] != -1) {
+                printf("%d ", frames[j]);
+            } else {
+                printf("- ");
+            }
+        }
+        printf("\n");
+    }
+
+    // Final statistics
+    printf("Total Page Faults: %d\n", page_faults);
+    printf("Total Page Hits: %d\n", page_hits);
+
+    return 0;
+}
